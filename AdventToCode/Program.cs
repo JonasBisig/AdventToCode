@@ -30,58 +30,67 @@ namespace AdventToCode
             int rowOffset= -1;
             int colOffset = -1;
 
-            for (int curRow = 0; curRow < paperRack.Count; curRow++)
-            {
-                for (int curCol = 0; curCol < paperRack[curRow].Count; curCol++)
-                {
-                    char curItem = paperRack[curRow][curCol];
-                    int rollCount = 0;
-                    while (true)
-                    {
-                        if (curItem != '@') break;
+            bool removedPaperRoll = true;
 
-                        //when the offset is pointing at the curItem don't increment rollCount
-                        if (rowOffset != 0 || colOffset != 0)
+            while (removedPaperRoll)
+            {
+                removedPaperRoll = false;
+
+                for (int curRow = 0; curRow < paperRack.Count; curRow++)
+                {
+                    for (int curCol = 0; curCol < paperRack[curRow].Count; curCol++)
+                    {
+                        char curItem = paperRack[curRow][curCol];
+                        int rollCount = 0;
+                        while (true)
                         {
-                            //check if index curRow + rowOffset is out of bounds
-                            if (curRow + rowOffset >= 0 && curRow + rowOffset < paperRack.Count)
+                            if (curItem != '@') break;
+
+                            //when the offset is pointing at the curItem don't increment rollCount
+                            if (rowOffset != 0 || colOffset != 0)
                             {
-                                //check if index curCol + colOffset is out of bounds
-                                if (curCol + colOffset >= 0 && curCol + colOffset < paperRack[curRow + rowOffset].Count)
+                                //check if index curRow + rowOffset is out of bounds
+                                if (curRow + rowOffset >= 0 && curRow + rowOffset < paperRack.Count)
                                 {
-                                    //if the offset position is a paper roll, increment rollCount
-                                    if (paperRack[curRow + rowOffset][curCol + colOffset] == '@')
+                                    //check if index curCol + colOffset is out of bounds
+                                    if (curCol + colOffset >= 0 && curCol + colOffset < paperRack[curRow + rowOffset].Count)
                                     {
-                                        rollCount++;
+                                        //if the offset position is a paper roll, increment rollCount
+                                        if (paperRack[curRow + rowOffset][curCol + colOffset] == '@')
+                                        {
+                                            rollCount++;
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        //move the offsets  ->  -1, -1  ->  0, -1  ->  1, -1  ->  -1, 0  ->  0, 0  ->  1, 0  ->  -1, 1  ->  0, 1  ->  1, 1
-                        if (colOffset == 1)
-                        {
-                            colOffset = -1;
-                            if (rowOffset == 1)
+                            //move the offsets  ->  -1, -1  ->  0, -1  ->  1, -1  ->  -1, 0  ->  0, 0  ->  1, 0  ->  -1, 1  ->  0, 1  ->  1, 1
+                            if (colOffset == 1)
                             {
-                                rowOffset = -1;
-                                break;
+                                colOffset = -1;
+                                if (rowOffset == 1)
+                                {
+                                    rowOffset = -1;
+                                    break;
+                                }
+                                else
+                                {
+                                    rowOffset++;
+                                }
                             }
                             else
                             {
-                                rowOffset++;
+                                colOffset++;
                             }
                         }
-                        else
-                        {
-                            colOffset++;
-                        }
-                    }
 
-                    //check if the curItem is a paper roll and if there are less then 4 adjacent paper rolls
-                    if (curItem == '@' && rollCount < 4)
-                    {
-                        result++;
+                        //check if the curItem is a paper roll and if there are less then 4 adjacent paper rolls
+                        if (curItem == '@' && rollCount < 4)
+                        {
+                            result++;
+                            paperRack[curRow][curCol] = '.';
+                            removedPaperRoll = true;
+                        }
                     }
                 }
             }
