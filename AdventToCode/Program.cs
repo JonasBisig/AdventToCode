@@ -18,7 +18,6 @@ namespace AdventToCode
             List<string> input = File.ReadLines(Path.Combine(Directory.GetParent(AppContext.BaseDirectory).Parent.Parent.FullName, "input.txt")).ToList();
 
             List<string> freshIDs = new List<string>();
-            int test = 0;
 
             //fill the freshIDs list with all the fresh id ranges
             foreach (string ranges in input)
